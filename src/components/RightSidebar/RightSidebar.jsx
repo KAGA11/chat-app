@@ -1,4 +1,4 @@
-import React, { useContext, useEffect,useState } from 'react'
+import { useContext, useEffect,useState } from 'react'
 import './RightSidebar.css'
 import assets from '../../assets/assets'
 import { logout } from '../../config/firebase'
@@ -29,7 +29,7 @@ const RightSidebar = () => {
       </div>
       <hr />
       <div className="rs-media">
-        <p>Media</p>
+        <p>history photo</p>
         <div>
           {msgImages.map((url,index)=>(<img onClick={()=>window.open(url)} key={index} src={url} alt="" />))}
         </div>

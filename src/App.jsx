@@ -8,6 +8,7 @@ import { Route, Routes, useNavigate } from 'react-router-dom';
 import Chat from './pages/Chat/Chat';
 import ProfileUpdate from './pages/ProfileUpdate/ProfileUpdate';
 import { AppContext } from './context/AppContext';
+import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
 
@@ -31,9 +32,18 @@ const App = () => {
     <>
       <ToastContainer />
       <Routes>
-        <Route path='/chat' element={<Chat />} />
+        <Route path='/chat' element={
+            <ProtectedRoute>
+              <Chat />
+            </ProtectedRoute>
+          } />
+
         <Route path='/' element={<Login />} />
-        <Route path='/profile' element={<ProfileUpdate />} />
+        <Route path='/profile' element={
+            <ProtectedRoute>
+              <ProfileUpdate />
+            </ProtectedRoute>
+          } />
       </Routes>
     </>
   )

@@ -18,6 +18,10 @@ const AppContextProvider = (props) => {
 
     const loadUserData = async (uid) => {
         try {
+            // 获取用户的引用，指定在 Firestore 中的路径 'users/{uid}'
+            // 获取用户文档的快照
+            // 从快照中提取用户数据
+            
             const userRef = doc(db, 'users', uid);
             const userSnap = await getDoc(userRef);
             const userData = userSnap.data();

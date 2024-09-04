@@ -20,8 +20,11 @@ const db = getFirestore(app)
 
 const signup = async (username, email, password) => {
     try {
+        // 在db中创建引用
         const usersRef = collection(db,'users')
+        // 查询username
         const q = query(usersRef,where("username", "==" ,username.toLowerCase()))
+        // snapshot为查询结果
         const querySnapshot = await getDocs(q)
         if(querySnapshot.docs.length>0){
             toast.error("Username already taken")

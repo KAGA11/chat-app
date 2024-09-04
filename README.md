@@ -1,8 +1,12 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
+后端:
+我的后端是基于 Firebase 搭建的。我们选择 Firebase 是因为它提供完整的解决方案来处理用户身份验证、数据库存储、文件存储
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+为什么选择 Firebase 来搭建后端？
+选择 Firebase 作为后端有几个关键的理由：
+
+简化开发流程：开发者不需要自己管理服务器和数据库，这大大简化了开发过程。
+高效的身份验证：Firebase Authentication 支持多种身份验证方式，如电子邮件/密码登录、社交账号登录等，简化了用户管理。
+实时数据同步：适合聊天应用等需要实时更新的场景。
+安全性：Firebase 提供了内置的安全规则，可以根据用户身份和数据类型控制对数据库和存储的访问权限。
