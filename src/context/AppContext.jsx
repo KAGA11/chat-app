@@ -6,6 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 export const AppContext = createContext()
 
+
+// useContext 管理全局状态
+// userData 登录用户
+
 const AppContextProvider = (props) => {
 
     const [userData, setUserData] = useState(null);

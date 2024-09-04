@@ -6,6 +6,8 @@ import { arrayUnion, doc, getDoc, onSnapshot, updateDoc } from 'firebase/firesto
 import { db } from '../../config/firebase';
 import { toast } from 'react-toastify';
 import upload from '../../lib/upload';
+import imageCompression from 'browser-image-compression';
+import LazyLoadImage from '../LazyLoadImage'
 
 const ChatBox = () => {
 
@@ -15,7 +17,6 @@ const ChatBox = () => {
   const scrollEnd = useRef();
 
   const sendMessage = async () => {
-
     try {
 
       if (input && messagesId) {
@@ -69,37 +70,88 @@ const ChatBox = () => {
     return date;
   }
 
+  // const sendImage = async (e) => {
+
+  //   const fileUrl = await upload(e.target.files[0])
+
+  //   if (fileUrl && messagesId) {
+  //     await updateDoc(doc(db, "messages", messagesId), {
+  //       messages: arrayUnion({
+  //         sId: userData.id,
+  //         image: fileUrl,
+  //         createdAt: new Date()
+  //       })
+  //     })
+
+  //     const userIDs = [chatUser.rId, userData.id];
+
+  //     userIDs.forEach(async (id) => {
+  //       const userChatsRef = doc(db, "chats", id);
+  //       const userChatsSnapshot = await getDoc(userChatsRef);
+
+  //       if (userChatsSnapshot.exists()) {
+  //         const userChatsData = userChatsSnapshot.data();
+  //         const chatIndex = userChatsData.chatsData.findIndex((c) => c.messageId === messagesId);
+  //         userChatsData.chatsData[chatIndex].lastMessage = "Image";
+  //         userChatsData.chatsData[chatIndex].updatedAt = Date.now();
+  //         await updateDoc(userChatsRef, {
+  //           chatsData: userChatsData.chatsData,
+  //         });
+  //       }
+  //     })
+  //   }
+  // }
+
+
+  // 图片压缩
   const sendImage = async (e) => {
-
-    const fileUrl = await upload(e.target.files[0])
-
-    if (fileUrl && messagesId) {
-      await updateDoc(doc(db, "messages", messagesId), {
-        messages: arrayUnion({
-          sId: userData.id,
-          image: fileUrl,
-          createdAt: new Date()
-        })
-      })
-
-      const userIDs = [chatUser.rId, userData.id];
-
-      userIDs.forEach(async (id) => {
-        const userChatsRef = doc(db, "chats", id);
-        const userChatsSnapshot = await getDoc(userChatsRef);
-
-        if (userChatsSnapshot.exists()) {
-          const userChatsData = userChatsSnapshot.data();
-          const chatIndex = userChatsData.chatsData.findIndex((c) => c.messageId === messagesId);
-          userChatsData.chatsData[chatIndex].lastMessage = "Image";
-          userChatsData.chatsData[chatIndex].updatedAt = Date.now();
-          await updateDoc(userChatsRef, {
-            chatsData: userChatsData.chatsData,
-          });
-        }
-      })
+    try {
+      const file = e.target.files[0];
+      
+      // 设置压缩选项
+      const options = {
+        maxSizeMB: 1, 
+        maxWidthOrHeight: 800, 
+        useWebWorker: true, 
+      };
+      
+      // 压缩图片
+      const compressedFile = await imageCompression(file, options);
+      
+      // 上传压缩后的图片
+      const fileUrl = await upload(compressedFile);
+  
+      if (fileUrl && messagesId) {
+        await updateDoc(doc(db, "messages", messagesId), {
+          messages: arrayUnion({
+            sId: userData.id,
+            image: fileUrl,
+            createdAt: new Date()
+          })
+        });
+  
+        const userIDs = [chatUser.rId, userData.id];
+  
+        userIDs.forEach(async (id) => {
+          const userChatsRef = doc(db, "chats", id);
+          const userChatsSnapshot = await getDoc(userChatsRef);
+  
+          if (userChatsSnapshot.exists()) {
+            const userChatsData = userChatsSnapshot.data();
+            const chatIndex = userChatsData.chatsData.findIndex((c) => c.messageId === messagesId);
+            userChatsData.chatsData[chatIndex].lastMessage = "Image";
+            userChatsData.chatsData[chatIndex].updatedAt = Date.now();
+            await updateDoc(userChatsRef, {
+              chatsData: userChatsData.chatsData,
+            });
+          }
+        });
+      }
+    } catch (error) {
+      console.error("Error uploading image: ", error);
     }
-  }
+  };
+  
 
 
   useEffect(() => {
@@ -133,7 +185,8 @@ const ChatBox = () => {
             return (
               <div key={index} className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
                 {msg["image"]
-                  ? <img className='msg-img' src={msg["image"]} alt="" />
+                //  懒加载
+                  ? <LazyLoadImage className='msg-img' src={msg["image"]} alt="" />
                   : <p className="msg">{msg["text"]}</p>
                 }
                 <div>
@@ -147,10 +200,12 @@ const ChatBox = () => {
       </div>
       <div className="chat-input">
         <input onKeyDown={(e) => e.key === "Enter" ? sendMessage() : null} onChange={(e) => setInput(e.target.value)} value={input} type="text" placeholder='Send a message' />
+       {/* 上传图片 */}
         <input onChange={sendImage} type="file" id='image' accept="image/png, image/jpeg" hidden />
         <label htmlFor="image">
           <img src={assets.gallery_icon} alt="" />
         </label>
+
         <img onClick={sendMessage} src={assets.send_button} alt="" />
       </div>
     </div>
