@@ -1,5 +1,5 @@
 import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
-import { createContext, useEffect, useState } from "react";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { auth, db } from "../config/firebase";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -20,7 +20,8 @@ const AppContextProvider = (props) => {
     const [chatVisible,setChatVisible] = useState(false);
     const navigate = useNavigate();
 
-    const loadUserData = async (uid) => {
+    // 登录用户的信息 用useCallback缓存
+    const loadUserData = useCallback( async (uid) => {
         try {
             // 获取用户的引用，指定在 Firestore 中的路径 'users/{uid}'
             // 获取用户文档的快照
@@ -49,7 +50,8 @@ const AppContextProvider = (props) => {
         } catch (error) {
             toast.error(error.message)
         }
-    }
+    },[navigate,auth.chatUser])  
+    
 
     useEffect(() => {
         if (userData) {

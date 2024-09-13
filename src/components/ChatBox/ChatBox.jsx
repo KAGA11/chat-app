@@ -103,7 +103,7 @@ const ChatBox = () => {
   // }
 
 
-  // 图片压缩
+  // 图片压缩 imageCompression
   const sendImage = async (e) => {
     try {
       const file = e.target.files[0];

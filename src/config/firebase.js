@@ -5,6 +5,7 @@ import { collection, doc, getDocs, getFirestore, query, setDoc, where } from 'fi
 import { toast } from "react-toastify";
 
 
+// Firebase 是 后端服务平台，简化后端开发
 const firebaseConfig = {
     apiKey: "AIzaSyDjlrsBLPOZnqSKpanrdLTOrmt8nSK-xZk",
     authDomain: "chat-app-ts-74d29.firebaseapp.com",

@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 
 
-// 懒加载 用户实际滚动到图片所在的消息时才加载图片
+// 懒加载 用户实际滚动到图片所在的消息时才加载图片 判断图片所在位置是否在可视区域内
 const LazyLoadImage = ({ src, alt, className }) => {
   const imgRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);

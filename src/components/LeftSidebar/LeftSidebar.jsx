@@ -15,7 +15,6 @@ const LeftSidebar = () => {
     const navigate = useNavigate();
 
     const inputHandler = async (e) => {
-
         try {
             const input = e.target.value;
 
