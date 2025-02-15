@@ -70,39 +70,6 @@ const ChatBox = () => {
     return date;
   }
 
-  // const sendImage = async (e) => {
-
-  //   const fileUrl = await upload(e.target.files[0])
-
-  //   if (fileUrl && messagesId) {
-  //     await updateDoc(doc(db, "messages", messagesId), {
-  //       messages: arrayUnion({
-  //         sId: userData.id,
-  //         image: fileUrl,
-  //         createdAt: new Date()
-  //       })
-  //     })
-
-  //     const userIDs = [chatUser.rId, userData.id];
-
-  //     userIDs.forEach(async (id) => {
-  //       const userChatsRef = doc(db, "chats", id);
-  //       const userChatsSnapshot = await getDoc(userChatsRef);
-
-  //       if (userChatsSnapshot.exists()) {
-  //         const userChatsData = userChatsSnapshot.data();
-  //         const chatIndex = userChatsData.chatsData.findIndex((c) => c.messageId === messagesId);
-  //         userChatsData.chatsData[chatIndex].lastMessage = "Image";
-  //         userChatsData.chatsData[chatIndex].updatedAt = Date.now();
-  //         await updateDoc(userChatsRef, {
-  //           chatsData: userChatsData.chatsData,
-  //         });
-  //       }
-  //     })
-  //   }
-  // }
-
-
   // 图片压缩 imageCompression
   const sendImage = async (e) => {
     try {
@@ -158,6 +125,8 @@ const ChatBox = () => {
     scrollEnd.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages])
 
+
+  // onSnapshot检测获取信息
   useEffect(() => {
     if (messagesId) {
       const unSub = onSnapshot(doc(db, "messages", messagesId), (res) => {
